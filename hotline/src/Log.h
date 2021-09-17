@@ -2,14 +2,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#if defined(_DEBUG) || !defined(NDEBUG)
-#define LOG_TRACE(format, ...) printf("TRACE: " format "\n", __VA_ARGS__)
-#define LOG_INFO(format, ...) printf("INFO: " format "\n", __VA_ARGS__)
+// simple synchronous logging through printf()
+#define _INTERNAL_LOG_PATTERN(severity, format, ...) printf("[" #severity "] {" __FILE__ ":%d} " format "\n", __LINE__, __VA_ARGS__)
+
+#ifdef _DEBUG
+#define LOG_TRACE(format, ...) _INTERNAL_LOG_PATTERN(TRACE, format, __VA_ARGS__)
+#define LOG_INFO(format, ...) _INTERNAL_LOG_PATTERN(INFO, format, __VA_ARGS__)
 #else
 #define LOG_TRACE(format, ...)
 #define LOG_INFO(format, ...)
 #endif
 
-#define LOG_ERROR(format, ...) printf("ERROR: " format "\n", __VA_ARGS__)
-#define LOG_CRITICAL(format, ...) printf("CRITICAL ERROR: " format "\n", __VA_ARGS__)
+#define LOG_ERROR(format, ...) _INTERNAL_LOG_PATTERN(ERROR, format, __VA_ARGS__)
+#define LOG_CRITICAL(format, ...) _INTERNAL_LOG_PATTERN(CRITICAL ERROR, format, __VA_ARGS__)
 #define EXIT_CRITICAL(format, ...) { LOG_CRITICAL(format, __VA_ARGS__); exit(1); }

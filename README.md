@@ -1,2 +1,2 @@
 # Hotline miami clone
-This is my hotline miami clone without any engine
+This is my clone of Hotline Miami using no engine
