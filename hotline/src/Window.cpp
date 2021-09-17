@@ -33,13 +33,6 @@ Window::~Window() noexcept {
 	glfwTerminate();
 }
 
-void Window::Loop() {
-	while (!glfwWindowShouldClose(m_Window)) {
-		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
-	}
-}
-
 void Window::SetSizeCallback(GLFWframebuffersizefun func) { glfwSetFramebufferSizeCallback(m_Window, func); }
 
 void Window::SetKeyCallback(GLFWkeyfun func) { glfwSetKeyCallback(m_Window, func); }

@@ -14,8 +14,11 @@ public:
 	VBO(const VBO&) = delete;
 	VBO operator=(const VBO&) = delete;
 	~VBO() noexcept;
-	inline void Data(const void* data, GLsizeiptr size) const;
-	inline void Bind() const noexcept;
+	inline void Data(const void* data, GLsizeiptr size) const {
+		Bind();
+		glBufferData((GLenum)m_Type, size, data, m_Dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
+	}
+	inline void Bind() const noexcept { glBindBuffer((GLenum)m_Type, m_Id); }
 	constexpr GLuint GetId() const noexcept { return m_Id; }
 private:
 	GLuint m_Id;

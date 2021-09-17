@@ -5,7 +5,9 @@ class Window {
 public:
 	Window(int width, int height, bool fullscreen);
 	~Window() noexcept;
-	void Loop();
+	inline int ShouldClose() const noexcept { return glfwWindowShouldClose(m_Window); }
+	inline void PollEvents() const noexcept { glfwPollEvents(); }
+	inline void SwapBuffers() const noexcept { glfwSwapBuffers(m_Window); }
 public:
 	void SetSizeCallback(GLFWframebuffersizefun func);
 	void SetKeyCallback(GLFWkeyfun func);

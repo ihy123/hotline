@@ -19,11 +19,11 @@ private:
 
 class ShaderProgram {
 public:
-	ShaderProgram(Shader shaders[], size_t count);
+	ShaderProgram(Shader vertex, Shader fragment);
 	ShaderProgram(const ShaderProgram&) = delete;
 	ShaderProgram operator=(const ShaderProgram&) = delete;
 	~ShaderProgram() noexcept;
-	inline void Bind() const noexcept;
+	inline void Bind() const noexcept { glUseProgram(m_Id); }
 	constexpr GLuint GetId() const noexcept { return m_Id; }
 private:
 	GLuint m_Id;
