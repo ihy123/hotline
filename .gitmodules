@@ -1,0 +1,3 @@
+[submodule "hotline/3rd-party/glfw"]
+	path = hotline/3rd-party/glfw
+	url = https://github.com/glfw/glfw.git
