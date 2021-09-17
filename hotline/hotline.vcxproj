@@ -60,7 +60,8 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <BufferSecurityCheck>true</BufferSecurityCheck>
-      <AdditionalIncludeDirectories>3rd-party/glfw/include;3rd-party/glad/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;3rd-party/glfw/include;3rd-party/glad/include;3rd-party/stb</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -79,7 +80,8 @@
       <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>None</DebugInformationFormat>
       <BufferSecurityCheck>true</BufferSecurityCheck>
-      <AdditionalIncludeDirectories>3rd-party/glfw/include;3rd-party/glad/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;3rd-party/glfw/include;3rd-party/glad/include;3rd-party/stb</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -92,11 +94,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="3rd-party\glad\src\gl.c" />
+    <ClCompile Include="src\gfx\ShaderProgram.cpp" />
+    <ClCompile Include="src\gfx\Texture.cpp" />
+    <ClCompile Include="src\gfx\VAO.cpp" />
+    <ClCompile Include="src\gfx\VBO.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\gfx\ShaderProgram.h" />
+    <ClInclude Include="src\gfx\Texture.h" />
+    <ClInclude Include="src\gfx\VAO.h" />
+    <ClInclude Include="src\gfx\VBO.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\Window.h" />
   </ItemGroup>
