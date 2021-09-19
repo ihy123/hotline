@@ -21,7 +21,7 @@ public:
 	inline void Bind() const noexcept { glBindBuffer((GLenum)m_Type, m_Id); }
 	constexpr GLuint GetId() const noexcept { return m_Id; }
 private:
-	GLuint m_Id;
+	GLuint m_Id = 0;
 	Type m_Type;
 	bool m_Dynamic;
 };

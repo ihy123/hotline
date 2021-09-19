@@ -60,7 +60,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <BufferSecurityCheck>true</BufferSecurityCheck>
-      <AdditionalIncludeDirectories>src;3rd-party/glfw/include;3rd-party/glad/include;3rd-party/stb</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;3rd-party/glfw/include;3rd-party/glad/include;3rd-party/stb;3rd-party/glm</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -80,7 +80,7 @@
       <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>None</DebugInformationFormat>
       <BufferSecurityCheck>true</BufferSecurityCheck>
-      <AdditionalIncludeDirectories>src;3rd-party/glfw/include;3rd-party/glad/include;3rd-party/stb</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;3rd-party/glfw/include;3rd-party/glad/include;3rd-party/stb;3rd-party/glm</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>

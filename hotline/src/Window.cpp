@@ -2,14 +2,19 @@
 #include "Window.h"
 #include "Log.h"
 
-Window::Window(int width, int height, bool fullscreen) {
+Window::Window(int width, int height, bool fullscreen)
+	: m_Size(width, height) {
 	if (glfwInit() == GLFW_FALSE) {
 		const char* error;
 		glfwGetError(&error);
 		EXIT_CRITICAL("%s", error);
 	}
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+#ifdef _DEBUG
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+#else
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+#endif
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
@@ -22,10 +27,18 @@ Window::Window(int width, int height, bool fullscreen) {
 	}
 	glfwSetErrorCallback(GLFWErrorCallback);
 	glfwMakeContextCurrent(m_Window);
-	glfwSwapInterval(1);
+
+	glfwSetWindowUserPointer(m_Window, this);
+	glfwSetFramebufferSizeCallback(m_Window, (GLFWframebuffersizefun)GLFWSizeCallback);
+	glfwSetCursorPosCallback(m_Window, (GLFWcursorposfun)GLFWCursorPosCallback);
 
 	if (!gladLoadGL(glfwGetProcAddress))
 		EXIT_CRITICAL("gladLoadGL() failed");
+
+#ifdef _DEBUG
+	glEnable(GL_DEBUG_OUTPUT);
+	glDebugMessageCallback((GLDEBUGPROC)GLDebugCallback, nullptr);
+#endif
 }
 
 Window::~Window() noexcept {
@@ -33,16 +46,33 @@ Window::~Window() noexcept {
 	glfwTerminate();
 }
 
-void Window::SetSizeCallback(GLFWframebuffersizefun func) { glfwSetFramebufferSizeCallback(m_Window, func); }
-
-void Window::SetKeyCallback(GLFWkeyfun func) { glfwSetKeyCallback(m_Window, func); }
-
-void Window::SetCursorPosCallback(GLFWcursorposfun func) { glfwSetCursorPosCallback(m_Window, func); }
-
-void Window::SetMouseButtonCallback(GLFWmousebuttonfun func) { glfwSetMouseButtonCallback(m_Window, func); }
-
-void Window::SetScrollCallback(GLFWscrollfun func) { glfwSetScrollCallback(m_Window, func); }
+void GLAD_API_PTR Window::GLDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
+	switch (severity) {
+		case GL_DEBUG_SEVERITY_HIGH:
+			LOG_CRITICAL("OpenGL: %s", message);
+			break;
+		case GL_DEBUG_SEVERITY_MEDIUM:
+			LOG_ERROR("OpenGL: %s", message);
+			break;
+		default:
+			LOG_INFO("OpenGL: %s", message);
+			break;
+	}
+}
 
 void Window::GLFWErrorCallback(int error_code, const char* description) {
 	LOG_ERROR("GLFW [code:%d]: %s", error_code, description);
+}
+
+void Window::GLFWSizeCallback(GLFWwindow* window, int width, int height) noexcept {
+	auto& size = ((Window*)glfwGetWindowUserPointer(window))->m_Size;
+	size.x = width;
+	size.y = height;
+	glViewport(0, 0, width, height);
+}
+
+void Window::GLFWCursorPosCallback(GLFWwindow* window, double x, double y) noexcept {
+	auto& pos = ((Window*)glfwGetWindowUserPointer(window))->m_CursorPos;
+	pos.x = (float)x;
+	pos.y = (float)y;
 }

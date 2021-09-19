@@ -17,5 +17,5 @@ public:
 	inline void Bind() const noexcept { glBindVertexArray(m_Id); }
 	constexpr GLuint GetId() const noexcept { return m_Id; }
 private:
-	GLuint m_Id;
+	GLuint m_Id = 0;
 };
