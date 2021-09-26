@@ -15,8 +15,8 @@ public:
 			wnd.PollEvents();
 			renderer.Prepare();
 
-			renderer.TexturedQuad(cursor, { 0.04f, 0.04f },
-				glm::translate(glm::identity<glm::mat4>(), { wnd.GetCursorPos().x / (float)wnd.GetSize().x - 0.02f, 1.0f - wnd.GetCursorPos().y / (float)wnd.GetSize().y - 0.02f, 0.0f }),
+			renderer.TexturedQuad(cursor, { 22, 22 },
+				glm::translate(glm::identity<glm::mat4>(), { wnd.GetCursorPos().x - 11, wnd.GetSize().y - wnd.GetCursorPos().y - 11, 0.0f }),
 				{ 0.0f, 0.0f }, { 1.0f, 1.0f });
 			wnd.SwapBuffers();
 		}

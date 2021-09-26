@@ -5,12 +5,12 @@
 // simple synchronous logging through printf()
 #define _INTERNAL_LOG_PATTERN(severity, format, ...) printf("[" #severity "] {" __FILE__ ":%d} " format "\n", __LINE__, __VA_ARGS__)
 
-#ifdef _DEBUG
-#define LOG_TRACE(format, ...) _INTERNAL_LOG_PATTERN(TRACE, format, __VA_ARGS__)
-#define LOG_INFO(format, ...) _INTERNAL_LOG_PATTERN(INFO, format, __VA_ARGS__)
-#else
+#ifdef NDEBUG
 #define LOG_TRACE(format, ...)
 #define LOG_INFO(format, ...)
+#else
+#define LOG_TRACE(format, ...) _INTERNAL_LOG_PATTERN(TRACE, format, __VA_ARGS__)
+#define LOG_INFO(format, ...) _INTERNAL_LOG_PATTERN(INFO, format, __VA_ARGS__)
 #endif
 
 #define LOG_ERROR(format, ...) _INTERNAL_LOG_PATTERN(ERROR, format, __VA_ARGS__)

@@ -76,12 +76,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLM_FORCE_SSE2;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>None</DebugInformationFormat>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <AdditionalIncludeDirectories>src;3rd-party/glfw/include;3rd-party/glad/include;3rd-party/stb;3rd-party/glm</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -94,6 +95,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="3rd-party\glad\src\gl.c" />
+    <ClCompile Include="src\entity\components\Position.cpp" />
     <ClCompile Include="src\gfx\ShaderProgram.cpp" />
     <ClCompile Include="src\gfx\Texture.cpp" />
     <ClCompile Include="src\gfx\VAO.cpp" />
@@ -102,6 +104,9 @@
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\entity\components\Position.h" />
+    <ClInclude Include="src\entity\ECS.h" />
+    <ClInclude Include="src\entity\ECSComponents.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\gfx\Renderer.h" />
     <ClInclude Include="src\gfx\ShaderProgram.h" />

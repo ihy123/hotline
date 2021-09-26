@@ -10,7 +10,7 @@ Window::Window(int width, int height, bool fullscreen)
 		EXIT_CRITICAL("%s", error);
 	}
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
-#ifdef _DEBUG
+#ifndef NDEBUG
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 #else
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -35,7 +35,7 @@ Window::Window(int width, int height, bool fullscreen)
 	if (!gladLoadGL(glfwGetProcAddress))
 		EXIT_CRITICAL("gladLoadGL() failed");
 
-#ifdef _DEBUG
+#ifndef NDEBUG
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback((GLDEBUGPROC)GLDebugCallback, nullptr);
 #endif
@@ -44,6 +44,11 @@ Window::Window(int width, int height, bool fullscreen)
 Window::~Window() noexcept {
 	if (m_Window) glfwDestroyWindow(m_Window);
 	glfwTerminate();
+}
+
+void Window::SetMouseRawInput(bool state) const noexcept {
+	if (glfwRawMouseMotionSupported())
+		glfwSetInputMode(m_Window, GLFW_RAW_MOUSE_MOTION, (int)state);
 }
 
 void GLAD_API_PTR Window::GLDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {

@@ -13,6 +13,8 @@ public:
 	const glm::vec2& GetCursorPos() const { return m_CursorPos; }
 
 	inline void SetVsync(bool state) const noexcept { glfwSwapInterval(state); }
+	inline void SetCursorEnabled(bool state) const noexcept { glfwSetInputMode(m_Window, GLFW_CURSOR, state ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED); }
+	void SetMouseRawInput(bool state) const noexcept;
 
 	inline int ShouldClose() const noexcept { return glfwWindowShouldClose(m_Window); }
 	inline void PollEvents() const noexcept { glfwPollEvents(); }
