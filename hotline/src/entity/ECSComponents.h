@@ -1,9 +1,12 @@
 #pragma once
-#include <stdint.h>
-#include "components/Position.h"
+#include <cstdint>
+#include "components/Physics.h"
+#include "components/Sprite.h"
 
 enum class Component : uint32_t {
-	Position = 0,
+	// add components here
+	Physics = 0,
+	Sprite,
 	COUNT
 };
 
@@ -11,6 +14,10 @@ enum class Component : uint32_t {
 	extern void name##Init(class ECS& ecs); \
 	name##Init(ecs)
 
-inline static void ECSInitComponents(class ECS& ecs) {
-	_ECS_DECL_COMPONENT(Position);
+inline static void _ECSInitComponents(class ECS& ecs) {
+	// add components here also
+	_ECS_DECL_COMPONENT(Physics);
+	_ECS_DECL_COMPONENT(Sprite);
 }
+
+#undef _ECS_DECL_COMPONENT
