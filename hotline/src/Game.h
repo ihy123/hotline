@@ -1,28 +1,39 @@
 #pragma once
-#include <gfx/Renderer.h>
-#include "Window.h"
+#include "State.h"
+#include <Stage.h>
 
 class Game {
 public:
-	Game()
-		: wnd(800, 600, false),
-		  floor("res/textures/spr_WoodFloor.png"),
-		  cursor("res/textures/spr_Cursor.png") {
-		wnd.SetVsync(true);
+	Game() {
+		state.curStage = new Stage();
+		state.curStage->SetPlayer({ 0.0f, 0.0f }, { 0.25f, 0.25f });
+		state.curStage->AddWall({ 4.0f, 4.0f }, { 1.5f, 1.5f });
 	}
+	~Game() noexcept { delete state.curStage; }
 	void Run() {
-		while (!wnd.ShouldClose()) {
-			wnd.PollEvents();
-			renderer.Prepare();
+		float dt = 0.0f, time, prevTime = (float)glfwGetTime();
+		while (!state.wnd.ShouldClose()) {
+			Update();
 
-			renderer.TexturedQuad(cursor, { 22, 22 },
-				glm::translate(glm::identity<glm::mat4>(), { wnd.GetCursorPos().x - 11, wnd.GetSize().y - wnd.GetCursorPos().y - 11, 0.0f }),
-				{ 0.0f, 0.0f }, { 1.0f, 1.0f });
-			wnd.SwapBuffers();
+			time = (float)glfwGetTime();
+			dt += time - prevTime; // ms
+			prevTime = time;
+			for (; dt >= TICK_TIME; dt -= TICK_TIME)
+				Tick();
+
+			Render();
 		}
 	}
-private:
-	Window wnd;
-	Renderer renderer;
-	Texture floor, cursor;
+	inline void Update() {
+		state.wnd.PollEvents();
+		state.curStage->Update();
+	}
+	inline void Tick() {
+		state.curStage->Tick();
+	}
+	inline void Render() {
+		state.renderer.Prepare();
+		state.curStage->Render();
+		state.wnd.SwapBuffers();
+	}
 };
