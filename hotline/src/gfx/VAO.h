@@ -6,7 +6,7 @@ class VAO {
 public:
 	VAO();
 	VAO(const VAO&) = delete;
-	VAO operator=(const VAO&) = delete;
+	VAO& operator=(const VAO&) = delete;
 	~VAO() noexcept;
 	inline void Attribute(VBO& vbo, GLuint index, GLint size, GLenum type, GLsizei stride, size_t offset) const {
 		Bind();

@@ -5,7 +5,7 @@ class Texture {
 public:
 	Texture(const char* file_path);
 	Texture(const Texture&) = delete;
-	Texture operator=(const Texture&) = delete;
+	Texture& operator=(const Texture&) = delete;
 	~Texture() noexcept;
 	inline void Bind() const noexcept { glBindTexture(GL_TEXTURE_2D, m_Id); }
 	constexpr GLuint GetId() const noexcept { return m_Id; }

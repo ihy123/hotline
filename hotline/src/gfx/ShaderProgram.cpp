@@ -1,5 +1,5 @@
 #include "ShaderProgram.h"
-#include "Log.h"
+#include <Log.h>
 #include <fstream>
 
 Shader::Shader(Type type, const char* file_path) {

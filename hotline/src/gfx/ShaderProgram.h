@@ -12,7 +12,7 @@ public:
 public:
 	Shader(Type type, const char* file_path);
 	Shader(const Shader&) = delete;
-	Shader operator=(const Shader&) = delete;
+	Shader& operator=(const Shader&) = delete;
 	~Shader() noexcept;
 	constexpr GLuint GetId() const noexcept { return m_Id; }
 private:
@@ -23,7 +23,7 @@ class ShaderProgram {
 public:
 	ShaderProgram(Shader vertex, Shader fragment);
 	ShaderProgram(const ShaderProgram&) = delete;
-	ShaderProgram operator=(const ShaderProgram&) = delete;
+	ShaderProgram& operator=(const ShaderProgram&) = delete;
 	~ShaderProgram() noexcept;
 	inline void UniformVec4(const char* name, const glm::vec4& val) const {
 		glUniform4f(glGetUniformLocation(m_Id, name), val.x, val.y, val.z, val.w);

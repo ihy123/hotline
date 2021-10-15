@@ -1,5 +1,5 @@
 #include "Texture.h"
-#include "Log.h"
+#include <Log.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 

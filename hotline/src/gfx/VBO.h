@@ -12,7 +12,7 @@ public:
 public:
 	VBO(Type type, bool dynamic);
 	VBO(const VBO&) = delete;
-	VBO operator=(const VBO&) = delete;
+	VBO& operator=(const VBO&) = delete;
 	~VBO() noexcept;
 	inline void Data(const void* data, GLsizeiptr size) const {
 		Bind();

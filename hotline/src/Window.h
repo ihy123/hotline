@@ -6,11 +6,12 @@ class Window {
 public:
 	Window(int width, int height, bool fullscreen);
 	Window(const Window&) = delete;
-	Window operator=(const Window&) = delete;
+	Window& operator=(const Window&) = delete;
 	~Window() noexcept;
 
 	const glm::ivec2& GetSize() const { return m_Size; }
 	const glm::vec2& GetCursorPos() const { return m_CursorPos; }
+	inline bool GetKey(int key) const noexcept { return m_Keys[key]; }
 
 	inline void SetVsync(bool state) const noexcept { glfwSwapInterval(state); }
 	inline void SetCursorEnabled(bool state) const noexcept { glfwSetInputMode(m_Window, GLFW_CURSOR, state ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED); }
@@ -20,7 +21,6 @@ public:
 	inline void PollEvents() const noexcept { glfwPollEvents(); }
 	inline void SwapBuffers() const noexcept { glfwSwapBuffers(m_Window); }
 public:
-	void SetKeyCallback(GLFWkeyfun func) { glfwSetKeyCallback(m_Window, func); }
 	void SetMouseButtonCallback(GLFWmousebuttonfun func) { glfwSetMouseButtonCallback(m_Window, func); }
 	void SetScrollCallback(GLFWscrollfun func) { glfwSetScrollCallback(m_Window, func); }
 private:
@@ -28,8 +28,11 @@ private:
 	static void GLFWErrorCallback(int error_code, const char* description);
 	static void GLFWSizeCallback(GLFWwindow* window, int width, int height) noexcept;
 	static void GLFWCursorPosCallback(GLFWwindow* window, double x, double y) noexcept;
+	static void GLFWKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) noexcept;
 private:
 	GLFWwindow* m_Window;
 	glm::ivec2 m_Size;
 	glm::vec2 m_CursorPos;
+
+	bool m_Keys[GLFW_KEY_LAST + 1];
 };
