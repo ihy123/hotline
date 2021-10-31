@@ -23,6 +23,22 @@ Texture::Texture(const char* file_path) {
 }
 
 Texture::~Texture() noexcept {
-	if (m_Id) glDeleteTextures(1, &m_Id);
+	if (m_Id != 0)
+		glDeleteTextures(1, &m_Id);
 	m_Id = 0;
+}
+
+Texture::Texture(Texture&& other)
+	: m_Id(other.m_Id),
+	  m_Width(other.m_Width),
+	  m_Height(other.m_Height) {
+	other.m_Id = 0;
+}
+
+Texture& Texture::operator=(Texture&& other) {
+	m_Id = other.m_Id;
+	m_Width = other.m_Width;
+	m_Height = other.m_Height;
+	other.m_Id = 0;
+	return *this;
 }

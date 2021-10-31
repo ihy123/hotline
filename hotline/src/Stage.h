@@ -7,7 +7,10 @@ static constexpr float TICK_TIME = 1.0f / 120.0f;
 
 class Stage {
 public:
-	Stage() : world(new b2World({ 0.0f, 0.0f })), player(nullptr), entPlayer(ecs.New()) {}
+	Stage() : world(new b2World({ 0.0f, 0.0f })), player(nullptr), entPlayer(ecs.New()) {
+		state.textureBank.emplace("player", Texture("res/textures/spr_Player.png"));
+		state.textureBank.emplace("wood", Texture("res/textures/spr_WoodFloor.png"));
+	}
 	Stage(const Stage&) = delete;
 	Stage& operator=(const Stage&) = delete;
 	~Stage() noexcept { delete world; }
@@ -36,6 +39,7 @@ public:
 	}
 
 	void SetBorder(const b2Vec2* vertices, int32 count) {
+		b2Body* border;
 		b2BodyDef bdef;
 		bdef.type = b2_staticBody;
 		b2ChainShape shape;
@@ -64,8 +68,14 @@ public:
 			.halfSize = halfSize,
 			.body = player
 		};
+		SpriteComponent sc{
+			.tex = state.textureBank["player"],
+			.uv_min = { 0.0f, 0.0f },
+			.uv_max = { 1.0f, 1.0f }
+		};
+
 		ecs.Add(entPlayer, Component::Physics, &pc);
-		ecs.Add(entPlayer, Component::Sprite, nullptr);
+		ecs.Add(entPlayer, Component::Sprite, &sc);
 	}
 	void AddWall(b2Vec2 pos, b2Vec2 halfSize) {
 		b2BodyDef bdef;
@@ -82,15 +92,19 @@ public:
 			.halfSize = halfSize,
 			.body = body
 		};
+		SpriteComponent sc{
+			.tex = state.textureBank["wood"],
+			.uv_min = { 0.0f, 0.0f },
+			.uv_max = { 1.0f, 1.0f }
+		};
 
 		Entity e = ecs.New();
 		ecs.Add(e, Component::Physics, &pc);
-		ecs.Add(e, Component::Sprite, nullptr);
+		ecs.Add(e, Component::Sprite, &sc);
 	}
 private:
 	ECS ecs;
 	b2World* world;
-	b2Body* border;
 	b2Body* player;
 	Entity entPlayer;
 };
