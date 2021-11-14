@@ -1,4 +1,3 @@
-#include "Sprite.h"
 #include <State.h>
 #include <entity/ECS.h>
 

@@ -2,12 +2,11 @@
 #include <State.h>
 #include <entity/ECS.h>
 #include <box2d/box2d.h>
-
-static constexpr float TICK_TIME = 1.0f / 120.0f;
+#include <State.h>
 
 class Stage {
 public:
-	Stage() : world(new b2World({ 0.0f, 0.0f })), player(nullptr), entPlayer(ecs.New()) {
+	Stage() : world(new b2World({ 0.0f, 0.0f })), entPlayer(ecs.New()), entCamera(ecs.New()) {
 		state.textureBank.emplace("player", Texture("res/textures/spr_Player.png"));
 		state.textureBank.emplace("wood", Texture("res/textures/spr_WoodFloor.png"));
 	}
@@ -15,19 +14,6 @@ public:
 	Stage& operator=(const Stage&) = delete;
 	~Stage() noexcept { delete world; }
 	inline void Update() {
-		b2Vec2 velocity(0.0f, 0.0f);
-		if (state.wnd.GetKey(GLFW_KEY_W) | state.wnd.GetKey(GLFW_KEY_UP))
-			velocity.y += 1.0f;
-		if (state.wnd.GetKey(GLFW_KEY_S) | state.wnd.GetKey(GLFW_KEY_DOWN))
-			velocity.y -= 1.0f;
-		if (state.wnd.GetKey(GLFW_KEY_A) | state.wnd.GetKey(GLFW_KEY_LEFT))
-			velocity.x -= 1.0f;
-		if (state.wnd.GetKey(GLFW_KEY_D) | state.wnd.GetKey(GLFW_KEY_RIGHT))
-			velocity.x += 1.0f;
-
-		if (player)
-			player->SetLinearVelocity(velocity);
-
 		ecs.Event(Event::Update);
 	}
 	inline void Tick() {
@@ -35,6 +21,8 @@ public:
 		world->Step(TICK_TIME, 8, 3);
 	}
 	inline void Render() {
+		auto& pos = reinterpret_cast<PhysicsComponent*>(ecs.Get(entCamera, Component::Physics))->body->GetPosition();
+		state.renderer.SetViewProj({ pos.x, pos.y });
 		ecs.Event(Event::Render);
 	}
 
@@ -49,6 +37,7 @@ public:
 		border->CreateFixture(&shape, 0.0f);
 	}
 	void SetPlayer(b2Vec2 pos, b2Vec2 halfSize) {
+		b2Body* player;
 		b2BodyDef bdef;
 		bdef.type = b2_dynamicBody;
 		bdef.position = pos;
@@ -73,9 +62,34 @@ public:
 			.uv_min = { 0.0f, 0.0f },
 			.uv_max = { 1.0f, 1.0f }
 		};
+		PlayerControlComponent pcc{ .speed = 3.0f };
 
 		ecs.Add(entPlayer, Component::Physics, &pc);
 		ecs.Add(entPlayer, Component::Sprite, &sc);
+		ecs.Add(entPlayer, Component::PlayerControl, &pcc);
+
+		SetCamera();
+	}
+	void SetCamera() {
+		auto target = reinterpret_cast<PhysicsComponent*>(ecs.Get(entPlayer, Component::Physics));
+		b2Body* camera;
+		b2BodyDef bdef;
+		bdef.type = b2_kinematicBody;
+		bdef.position = target->body->GetPosition();
+		camera = world->CreateBody(&bdef);
+
+		PhysicsComponent pc{
+			.size = { 0.0f, 0.0f },
+			.halfSize = { 0.0f, 0.0f },
+			.body = camera
+		};
+		FollowComponent fc{
+			.target = target,
+			.speed = 0.1f
+		};
+
+		ecs.Add(entCamera, Component::Physics, &pc);
+		ecs.Add(entCamera, Component::Follow, &fc);
 	}
 	void AddWall(b2Vec2 pos, b2Vec2 halfSize) {
 		b2BodyDef bdef;
@@ -105,6 +119,6 @@ public:
 private:
 	ECS ecs;
 	b2World* world;
-	b2Body* player;
 	Entity entPlayer;
+	Entity entCamera;
 };

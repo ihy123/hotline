@@ -15,9 +15,7 @@ public:
 				{ Shader::Type::Fragment, "res/shaders/basic_color.frag" }),
 			ShaderProgram(
 				{ Shader::Type::Vertex, "res/shaders/basic_texture.vert" },
-				{ Shader::Type::Fragment, "res/shaders/basic_texture.frag" }) } {
-		view_proj = /* proj */ glm::ortho(0.0f, 800.0f / PIXELS_IN_METER, 0.0f, 600.0f / PIXELS_IN_METER, 0.0f, 10.0f);
-	}
+				{ Shader::Type::Fragment, "res/shaders/basic_texture.frag" }) } {}
 	void ColoredQuad(const glm::vec2& size, const glm::mat4& model, const glm::vec4& color) {
 		const float vertices[]{
 			0.0f,   0.0f,
@@ -68,6 +66,7 @@ public:
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
+	void SetViewProj(glm::vec2 camPos);
 private:
 	VBO vbo, ibo;
 	VAO vao;

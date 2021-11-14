@@ -97,8 +97,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="3rd-party\glad\src\gl.c" />
+    <ClCompile Include="src\entity\components\Follow.cpp" />
+    <ClCompile Include="src\entity\components\PlayerControl.cpp" />
     <ClCompile Include="src\entity\components\Physics.cpp" />
     <ClCompile Include="src\entity\components\Sprite.cpp" />
+    <ClCompile Include="src\gfx\Renderer.cpp" />
     <ClCompile Include="src\gfx\ShaderProgram.cpp" />
     <ClCompile Include="src\gfx\Texture.cpp" />
     <ClCompile Include="src\gfx\VAO.cpp" />
@@ -108,6 +111,8 @@
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\entity\components\Follow.h" />
+    <ClInclude Include="src\entity\components\PlayerControl.h" />
     <ClInclude Include="src\State.h" />
     <ClInclude Include="src\entity\components\Sprite.h" />
     <ClInclude Include="src\entity\components\Physics.h" />

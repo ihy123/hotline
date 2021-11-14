@@ -1,4 +1,3 @@
-#include "Physics.h"
 #include <entity/ECS.h>
 
 void PhysicsInit(ECS& ecs) {

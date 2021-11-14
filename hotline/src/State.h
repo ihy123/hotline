@@ -4,6 +4,8 @@
 #include <gfx/Renderer.h>
 #include <Window.h>
 
+static constexpr float TICK_TIME = 1.0f / 120.0f;
+
 struct State {
 	Window wnd;
 	Renderer renderer;
