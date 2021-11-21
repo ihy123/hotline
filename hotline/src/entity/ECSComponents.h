@@ -4,6 +4,8 @@
 #include "components/Sprite.h"
 #include "components/PlayerControl.h"
 #include "components/Follow.h"
+#include "components/Combat.h"
+#include "components/Health.h"
 
 enum class Component : uint32_t {
 	// add components here
@@ -11,6 +13,8 @@ enum class Component : uint32_t {
 	Sprite,
 	PlayerControl,
 	Follow,
+	Combat,
+	Health,
 	COUNT
 };
 
@@ -24,6 +28,8 @@ inline static void _ECSInitComponents(class ECS& ecs) {
 	_ECS_DECL_COMPONENT(Sprite);
 	_ECS_DECL_COMPONENT(PlayerControl);
 	_ECS_DECL_COMPONENT(Follow);
+	_ECS_DECL_COMPONENT(Combat);
+	_ECS_DECL_COMPONENT(Health);
 }
 
 #undef _ECS_DECL_COMPONENT

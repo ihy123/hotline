@@ -7,9 +7,9 @@ void _SpriteOnRender(ECS* ecs, void* component, Entity entity) {
 	auto pc = reinterpret_cast<PhysicsComponent*>(ecs->Get(entity, Component::Physics));
 	auto& pos = pc->body->GetPosition();
 	state.renderer.TexturedQuad(sc->tex,
-		{ pc->size.x, pc->size.y },
-		glm::translate(glm::identity<glm::mat4>(),
-			{ pos.x - pc->halfSize.x, pos.y - pc->halfSize.y, 0.0f }),
+		{ pc->halfSize.x, pc->halfSize.y },
+		glm::rotate(glm::translate(glm::identity<glm::mat4>(),
+			{ pos.x, pos.y, 0.0f }), pc->body->GetAngle(), { 0.0f, 0.0f, 1.0f }),
 		sc->uv_min, sc->uv_max);
 }
 

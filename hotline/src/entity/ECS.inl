@@ -1,5 +1,6 @@
 #include <Log.h>
 #include <errno.h>
+#include "ECS.h"
 
 #define ECS_COMPONENT_FLAG(component) (1u << (uint32_t)component)
 #define ECS_CS_GET_COMPONENT(cs, index) (((uint8_t*)(cs).data) + (index) * (cs).componentSize)
@@ -32,6 +33,14 @@ inline void ECS::Disable(Entity e, Component c) noexcept {
 	entities[e.id].componentFlags &= ~ECS_COMPONENT_FLAG(c);
 }
 
+inline void ECS::Enable(Entity e) noexcept {
+	entities[e.id].entityState = (uint32_t)EntityState::Alive;
+}
+
+inline void ECS::Disable(Entity e) noexcept {
+	entities[e.id].entityState = (uint32_t)EntityState::Inactive;
+}
+
 inline void ECS::Event(::Event e) {
 	for (uint32_t i = 0; i < (uint32_t)Component::COUNT; ++i) {
 		auto& comp = components[i];
@@ -39,8 +48,8 @@ inline void ECS::Event(::Event e) {
 		if (!f)
 			continue;
 		for (size_t j = 0; j < entities.size(); ++j) {
-			if (entities[j].entityState == (uint32_t)EntityState::Alive && Has(j, (Component)i))
-				f(this, ECS_CS_GET_COMPONENT(comp, j), j);
+			if (entities[j].entityState == (uint32_t)EntityState::Alive && Has((uint32_t)j, (Component)i))
+				f(this, ECS_CS_GET_COMPONENT(comp, j), (uint32_t)j);
 		}
 	}
 }

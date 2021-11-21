@@ -4,8 +4,6 @@
 #include "VBO.h"
 #include "Texture.h"
 
-static constexpr float PIXELS_IN_METER = 64.0f;
-
 class Renderer {
 public:
 	Renderer()
@@ -35,12 +33,12 @@ public:
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
-	void TexturedQuad(const Texture& tex, const glm::vec2& size, const glm::mat4& model, const glm::vec2& uv_min, const glm::vec2& uv_max) {
+	void TexturedQuad(const Texture* tex, const glm::vec2& halfSize, const glm::mat4& model, const glm::vec2& uv_min, const glm::vec2& uv_max) {
 		const float vertices[]{
-			0.0f,   0.0f,      uv_min.x, uv_min.y,
-			size.x, 0.0f,      uv_max.x, uv_min.y,
-			size.x, size.y,    uv_max.x, uv_max.y,
-			0.0f,   size.y,	   uv_min.x, uv_max.y
+			-halfSize.x, -halfSize.y,    uv_min.x, uv_min.y,
+			 halfSize.x, -halfSize.y,    uv_max.x, uv_min.y,
+			 halfSize.x,  halfSize.y,    uv_max.x, uv_max.y,
+			-halfSize.x,  halfSize.y,	 uv_min.x, uv_max.y
 		};
 		const unsigned short indices[]{
 			0, 1, 2, 2, 3, 0
@@ -49,7 +47,7 @@ public:
 		shaders.basic_texture.Bind();
 		shaders.basic_texture.UniformMat4("model", model);
 		shaders.basic_texture.UniformMat4("view_proj", view_proj);
-		tex.Bind();
+		tex->Bind();
 		vbo.Data(vertices, sizeof(vertices));
 		vao.Attribute(vbo, 0, 2, GL_FLOAT, 4 * sizeof(float), 0);
 		vao.Attribute(vbo, 1, 2, GL_FLOAT, 4 * sizeof(float), 2 * sizeof(float));
@@ -58,7 +56,7 @@ public:
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 	}
 	inline void Prepare() {
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDisable(GL_DEPTH_TEST);
@@ -66,7 +64,9 @@ public:
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
-	void SetViewProj(glm::vec2 camPos);
+	inline void SetViewProj(const glm::mat4& viewProj) {
+		view_proj = viewProj;
+	}
 private:
 	VBO vbo, ibo;
 	VAO vao;

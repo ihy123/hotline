@@ -1,5 +1,6 @@
 #pragma once
 
 struct PlayerControlComponent {
-	float speed;
+	glm::vec2 direction;
+	float angle, speed;
 };

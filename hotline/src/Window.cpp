@@ -32,6 +32,7 @@ Window::Window(int width, int height, bool fullscreen)
 	glfwSetFramebufferSizeCallback(m_Window, (GLFWframebuffersizefun)GLFWSizeCallback);
 	glfwSetCursorPosCallback(m_Window, (GLFWcursorposfun)GLFWCursorPosCallback);
 	glfwSetKeyCallback(m_Window, (GLFWkeyfun)GLFWKeyCallback);
+	glfwSetMouseButtonCallback(m_Window, (GLFWmousebuttonfun)GLFWMouseCallback);
 
 	if (!gladLoadGL(glfwGetProcAddress))
 		EXIT_CRITICAL("gladLoadGL() failed");
@@ -85,7 +86,7 @@ void Window::GLFWCursorPosCallback(GLFWwindow* window, double x, double y) noexc
 }
 
 void Window::GLFWKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) noexcept {
-	auto& keys = ((Window*)glfwGetWindowUserPointer(window))->m_Keys;
+	auto& keys = ((Window*)glfwGetWindowUserPointer(window))->m_Keyboard;
 	switch (action) {
 		case GLFW_PRESS:
 			keys[key] = true;
@@ -94,6 +95,20 @@ void Window::GLFWKeyCallback(GLFWwindow* window, int key, int scancode, int acti
 		//	break;
 		case GLFW_RELEASE:
 			keys[key] = false;
+			break;
+	}
+}
+
+void Window::GLFWMouseCallback(GLFWwindow* window, int button, int action, int mods) noexcept {
+	auto& mouse = ((Window*)glfwGetWindowUserPointer(window))->m_Mouse;
+	switch (action) {
+		case GLFW_PRESS:
+			mouse[button] = true;
+			break;
+		//case GLFW_REPEAT:
+		//	break;
+		case GLFW_RELEASE:
+			mouse[button] = false;
 			break;
 	}
 }

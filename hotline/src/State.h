@@ -11,6 +11,7 @@ struct State {
 	Renderer renderer;
 	std::map<std::string, Texture> textureBank;
 	class Stage* curStage;
+	float time, prevTime;
 
 	State();
 };

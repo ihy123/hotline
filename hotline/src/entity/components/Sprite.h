@@ -3,6 +3,6 @@
 #include <gfx/Texture.h>
 
 struct SpriteComponent {
-	Texture& tex;
+	Texture* tex;
 	glm::vec2 uv_min, uv_max;
 };

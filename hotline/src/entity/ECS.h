@@ -59,6 +59,8 @@ public:
 	inline void* Get(Entity e, Component c) const noexcept;
 	inline void Enable(Entity e, Component c) noexcept;
 	inline void Disable(Entity e, Component c) noexcept;
+	inline void Enable(Entity e) noexcept;
+	inline void Disable(Entity e) noexcept;
 
 	inline void Event(Event e);
 private:

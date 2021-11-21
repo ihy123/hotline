@@ -7,14 +7,8 @@ public:
 	Game() {
 		Stage* stage = state.curStage = new Stage();
 
-		const b2Vec2 vertices[]{
-			{ 0.0f, 0.0f },
-			{ 0.0f, 13.6f },
-			{ 13.6f, 13.6f },
-			{ 13.6f, 0.0f }
-		};
-		stage->SetBorder(vertices, sizeof(vertices) / sizeof(*vertices));
-		stage->SetPlayer({ 1.0f, 1.0f }, { 0.25f, 0.25f });
+		stage->SetBorder({ 13.6f, 13.6f });
+		//stage->SetPlayer({ 1.0f, 1.0f }, { 0.25f, 0.25f });
 
 		//down
 		stage->AddWall({ 6.5f, 2.1f }, { 4.5f, 0.1f });
@@ -31,13 +25,14 @@ public:
 	}
 	~Game() noexcept { delete state.curStage; }
 	void Run() {
-		float dt = 0.0f, time, prevTime = (float)glfwGetTime();
+		float dt = 0.0f;
+		state.prevTime = (float)glfwGetTime();
 		while (!state.wnd.ShouldClose()) {
 			Update();
 
-			time = (float)glfwGetTime();
-			dt += time - prevTime; // ms
-			prevTime = time;
+			state.time = (float)glfwGetTime();
+			dt += state.time - state.prevTime; // ms
+			state.prevTime = state.time;
 			for (; dt >= TICK_TIME; dt -= TICK_TIME)
 				Tick();
 
