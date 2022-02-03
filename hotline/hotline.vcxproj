@@ -60,7 +60,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <BufferSecurityCheck>true</BufferSecurityCheck>
-      <AdditionalIncludeDirectories>src;3rd-party/glfw/include;3rd-party/glad/include;3rd-party/stb;3rd-party/glm;3rd-party/box2d/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;3rd-party/glfw/include;3rd-party/glad/include;3rd-party/stb;3rd-party/glm;3rd-party/box2d/include;3rd-party/entt/src</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
@@ -81,7 +81,7 @@
       <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>None</DebugInformationFormat>
       <BufferSecurityCheck>true</BufferSecurityCheck>
-      <AdditionalIncludeDirectories>src;3rd-party/glfw/include;3rd-party/glad/include;3rd-party/stb;3rd-party/glm;3rd-party/box2d/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;3rd-party/glfw/include;3rd-party/glad/include;3rd-party/stb;3rd-party/glm;3rd-party/box2d/include;3rd-party/entt/src</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
@@ -97,12 +97,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="3rd-party\glad\src\gl.c" />
-    <ClCompile Include="src\entity\components\Combat.cpp" />
-    <ClCompile Include="src\entity\components\Follow.cpp" />
-    <ClCompile Include="src\entity\components\Health.cpp" />
-    <ClCompile Include="src\entity\components\PlayerControl.cpp" />
-    <ClCompile Include="src\entity\components\Physics.cpp" />
-    <ClCompile Include="src\entity\components\Sprite.cpp" />
+    <ClCompile Include="src\gfx\Camera.cpp" />
+    <ClCompile Include="src\FrameTimer.cpp" />
+    <ClCompile Include="src\gfx\Animation.cpp" />
+    <ClCompile Include="src\gfx\EBO.cpp" />
     <ClCompile Include="src\gfx\ShaderProgram.cpp" />
     <ClCompile Include="src\gfx\Texture.cpp" />
     <ClCompile Include="src\gfx\VAO.cpp" />
@@ -112,17 +110,15 @@
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\entity\Camera.h" />
-    <ClInclude Include="src\entity\components\Combat.h" />
-    <ClInclude Include="src\entity\components\Follow.h" />
-    <ClInclude Include="src\entity\components\Health.h" />
-    <ClInclude Include="src\entity\components\PlayerControl.h" />
-    <ClInclude Include="src\entity\Player.h" />
+    <ClInclude Include="src\gfx\Camera.h" />
+    <ClInclude Include="src\FrameTimer.h" />
+    <ClInclude Include="src\gfx\Animation.h" />
+    <ClInclude Include="src\gfx\EBO.h" />
+    <ClInclude Include="src\gfx\TextureBank.h" />
     <ClInclude Include="src\State.h" />
     <ClInclude Include="src\entity\components\Sprite.h" />
     <ClInclude Include="src\entity\components\Physics.h" />
     <ClInclude Include="src\entity\ECS.h" />
-    <ClInclude Include="src\entity\ECSComponents.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\gfx\Renderer.h" />
     <ClInclude Include="src\gfx\ShaderProgram.h" />

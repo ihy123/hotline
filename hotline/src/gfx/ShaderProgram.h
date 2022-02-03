@@ -3,36 +3,30 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-class Shader {
-public:
-	enum class Type : GLenum {
-		Vertex = GL_VERTEX_SHADER,
-		Fragment = GL_FRAGMENT_SHADER
-	};
-public:
-	Shader(Type type, const char* file_path);
-	Shader(const Shader&) = delete;
-	Shader& operator=(const Shader&) = delete;
-	~Shader() noexcept;
-	constexpr GLuint GetId() const noexcept { return m_Id; }
-private:
-	GLuint m_Id = 0;
-};
-
 class ShaderProgram {
 public:
-	ShaderProgram(Shader vertex, Shader fragment);
+	ShaderProgram() = default;
+	ShaderProgram(const char* vert_path, const char* frag_path);
 	ShaderProgram(const ShaderProgram&) = delete;
 	ShaderProgram& operator=(const ShaderProgram&) = delete;
 	~ShaderProgram() noexcept;
-	inline void UniformVec4(const char* name, const glm::vec4& val) const {
-		glUniform4f(glGetUniformLocation(m_Id, name), val.x, val.y, val.z, val.w);
+
+	void Init(const char* vert_path, const char* frag_path);
+
+	inline void Bind() const noexcept { glUseProgram(id); }
+	inline void BindTextureUnit(const char* name, GLenum nUnit) const noexcept {
+		glUniform1i(glGetUniformLocation(id, name), nUnit);
 	}
-	inline void UniformMat4(const char* name, const glm::mat4& val) const {
-		glUniformMatrix4fv(glGetUniformLocation(m_Id, name), 1, GL_FALSE, glm::value_ptr(val));
+
+	inline void UniformVec3(const char* name, const glm::vec3& vec) const noexcept {
+		glUniform3f(glGetUniformLocation(id, name), vec.x, vec.y, vec.z);
 	}
-	inline void Bind() const noexcept { glUseProgram(m_Id); }
-	constexpr GLuint GetId() const noexcept { return m_Id; }
-private:
-	GLuint m_Id = 0;
+	inline void UniformVec4(const char* name, const glm::vec4& vec) const noexcept {
+		glUniform4f(glGetUniformLocation(id, name), vec.x, vec.y, vec.z, vec.w);
+	}
+	inline void UniformMat4(const char* name, const glm::mat4& mat) const noexcept {
+		glUniformMatrix4fv(glGetUniformLocation(id, name), 1, GL_FALSE, glm::value_ptr(mat));
+	}
+public:
+	GLuint id = 0;
 };

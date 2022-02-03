@@ -1,21 +1,20 @@
 #pragma once
 #include <glad/gl.h>
+#include <glm/glm.hpp>
 
 class Texture {
 public:
-	Texture() = default;
-	Texture(const char* file_path);
-	~Texture() noexcept;
+	Texture();
+	Texture(const char* path);
 	Texture(const Texture&) = delete;
 	Texture& operator=(const Texture&) = delete;
-	Texture(Texture&& other);
-	Texture& operator=(Texture&& other);
+	~Texture() noexcept;
 
-	inline void Bind() const noexcept { glBindTexture(GL_TEXTURE_2D, m_Id); }
-	constexpr GLuint GetId() const noexcept { return m_Id; }
-	constexpr int GetWidth() const noexcept { return m_Width; }
-	constexpr int GetHeight() const noexcept { return m_Height; }
-private:
-	GLuint m_Id = 0;
-	int m_Width = 0, m_Height = 0;
+	void Init(const char* path);
+
+	inline void Bind() const noexcept { glBindTexture(GL_TEXTURE_2D, id); }
+	inline void BindUnit(GLenum nUnit) const noexcept { glActiveTexture(GL_TEXTURE0 + nUnit); }
+public:
+	GLuint id = 0;
+	int width, height;
 };

@@ -2,64 +2,12 @@
 #include "Window.h"
 #include "Log.h"
 
-Window::Window(int width, int height, bool fullscreen)
-	: m_Size(width, height) {
-	if (glfwInit() == GLFW_FALSE) {
-		const char* error;
-		glfwGetError(&error);
-		EXIT_CRITICAL("%s", error);
-	}
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
-#ifndef NDEBUG
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-#else
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-#endif
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-	glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
-	m_Window = glfwCreateWindow(width, height, "Hotline", fullscreen ? glfwGetPrimaryMonitor() : nullptr, nullptr);
-	if (m_Window == nullptr) {
-		const char* error;
-		glfwGetError(&error);
-		EXIT_CRITICAL("%s", error);
-	}
-	glfwSetErrorCallback(GLFWErrorCallback);
-	glfwMakeContextCurrent(m_Window);
-
-	glfwSetWindowUserPointer(m_Window, this);
-	glfwSetFramebufferSizeCallback(m_Window, (GLFWframebuffersizefun)GLFWSizeCallback);
-	glfwSetCursorPosCallback(m_Window, (GLFWcursorposfun)GLFWCursorPosCallback);
-	glfwSetKeyCallback(m_Window, (GLFWkeyfun)GLFWKeyCallback);
-	glfwSetMouseButtonCallback(m_Window, (GLFWmousebuttonfun)GLFWMouseCallback);
-
-	if (!gladLoadGL(glfwGetProcAddress))
-		EXIT_CRITICAL("gladLoadGL() failed");
-
-#ifndef NDEBUG
-	glEnable(GL_DEBUG_OUTPUT);
-	glDebugMessageCallback((GLDEBUGPROC)GLDebugCallback, nullptr);
-	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
-#endif
-}
-
-Window::~Window() noexcept {
-	if (m_Window) glfwDestroyWindow(m_Window);
-	glfwTerminate();
-}
-
-void Window::SetMouseRawInput(bool state) const noexcept {
-	if (glfwRawMouseMotionSupported())
-		glfwSetInputMode(m_Window, GLFW_RAW_MOUSE_MOTION, (int)state);
-}
-
-void GLAD_API_PTR Window::GLDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
+static void GLAD_API_PTR GLDebugCallback(GLenum, GLenum, GLuint, GLenum severity, GLsizei, const GLchar* message, const void*) {
 	switch (severity) {
-		case GL_DEBUG_SEVERITY_HIGH:
+		case GL_DEBUG_SEVERITY_HIGH_ARB:
 			LOG_CRITICAL("OpenGL: %s", message);
 			break;
-		case GL_DEBUG_SEVERITY_MEDIUM:
+		case GL_DEBUG_SEVERITY_MEDIUM_ARB:
 			LOG_ERROR("OpenGL: %s", message);
 			break;
 		default:
@@ -68,8 +16,62 @@ void GLAD_API_PTR Window::GLDebugCallback(GLenum source, GLenum type, GLuint id,
 	}
 }
 
-void Window::GLFWErrorCallback(int error_code, const char* description) {
+static void GLFWErrorCallback(int error_code, const char* description) {
 	LOG_ERROR("GLFW [code:%d]: %s", error_code, description);
+}
+
+Window::Window(const char* title, int width, int height, bool fullscreen)
+	: m_Size(width, height) {
+	// init glfw
+	if (!glfwInit()) {
+		const char* error;
+		glfwGetError(&error);
+		EXIT_CRITICAL("%s", error);
+	}
+	// set opengl 3.3
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	// set core profile
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	// make context forward compat
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+	// create the window
+	m_Window = glfwCreateWindow(width, height, title, fullscreen ? glfwGetPrimaryMonitor() : nullptr, nullptr);
+	if (!m_Window) {
+		const char* error;
+		glfwGetError(&error);
+		EXIT_CRITICAL("%s", error);
+	}
+	// set glfw error callback to catch runtime errors
+	glfwSetErrorCallback(GLFWErrorCallback);
+	// make window current
+	glfwMakeContextCurrent(m_Window);
+
+	// set callbacks
+	glfwSetWindowUserPointer(m_Window, this);
+	glfwSetFramebufferSizeCallback(m_Window, (GLFWframebuffersizefun)GLFWSizeCallback);
+	glfwSetCursorPosCallback(m_Window, (GLFWcursorposfun)GLFWCursorPosCallback);
+	glfwSetKeyCallback(m_Window, (GLFWkeyfun)GLFWKeyCallback);
+	glfwSetMouseButtonCallback(m_Window, (GLFWmousebuttonfun)GLFWMouseCallback);
+
+	// init glad
+	if (!gladLoadGL(glfwGetProcAddress))
+		EXIT_CRITICAL("gladLoadGL() failed");
+
+	// enable debug callback when in debug mode and needed extension is present
+#ifndef NDEBUG
+	if (GLAD_GL_ARB_debug_output) {
+		//glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_LOW_ARB, 0, nullptr, GL_FALSE);
+		glDebugMessageCallbackARB(GLDebugCallback, nullptr);
+	}
+#endif
+}
+
+Window::~Window() noexcept {
+	if (m_Window)
+		glfwDestroyWindow(m_Window);
+	glfwTerminate();
 }
 
 void Window::GLFWSizeCallback(GLFWwindow* window, int width, int height) noexcept {

@@ -1,6 +1,7 @@
 #pragma once
 #include "State.h"
 #include <Stage.h>
+#include "FrameTimer.h"
 
 class Game {
 public:
@@ -8,7 +9,6 @@ public:
 		Stage* stage = state.curStage = new Stage();
 
 		stage->SetBorder({ 13.6f, 13.6f });
-		//stage->SetPlayer({ 1.0f, 1.0f }, { 0.25f, 0.25f });
 
 		//down
 		stage->AddWall({ 6.5f, 2.1f }, { 4.5f, 0.1f });
@@ -25,14 +25,11 @@ public:
 	}
 	~Game() noexcept { delete state.curStage; }
 	void Run() {
-		float dt = 0.0f;
-		state.prevTime = (float)glfwGetTime();
+		float dt;
 		while (!state.wnd.ShouldClose()) {
 			Update();
 
-			state.time = (float)glfwGetTime();
-			dt += state.time - state.prevTime; // ms
-			state.prevTime = state.time;
+			dt = frameTimer.dt;
 			for (; dt >= TICK_TIME; dt -= TICK_TIME)
 				Tick();
 
@@ -41,14 +38,18 @@ public:
 	}
 	inline void Update() {
 		state.wnd.PollEvents();
-		state.curStage->Update();
+		frameTimer.Frame();
+		state.curStage->Update(frameTimer.dt);
 	}
 	inline void Tick() {
 		state.curStage->Tick();
 	}
 	inline void Render() {
-		state.renderer.Prepare();
+		state.renderer.SetViewProj(state.curStage->camera.GetViewProj());
+		state.renderer.Clear(abs(sin(frameTimer.time * 2.0f)), 0.0f, 1.0f, 1.0f);
 		state.curStage->Render();
 		state.wnd.SwapBuffers();
 	}
+private:
+	FrameTimer frameTimer;
 };

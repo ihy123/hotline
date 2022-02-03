@@ -1,11 +1,16 @@
 #include "VBO.h"
 
-VBO::VBO(Type type, bool dynamic)
-	: m_Type(type), m_Dynamic(dynamic) {
-	glGenBuffers(1, &m_Id);
+VBO::VBO() {
+	glGenBuffers(1, &id);
+}
+
+VBO::VBO(const void* vertices, GLsizeiptr size, GLenum usage) : VBO() {
+	Data(vertices, size, usage);
 }
 
 VBO::~VBO() noexcept {
-	if (m_Id) glDeleteBuffers(1, &m_Id);
-	m_Id = 0;
+	if (id) {
+		glDeleteBuffers(1, &id);
+		id = 0;
+	}
 }

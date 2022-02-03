@@ -1,9 +1,9 @@
 #include "ShaderProgram.h"
-#include <Log.h>
 #include <fstream>
+#include "Log.h"
 
-Shader::Shader(Type type, const char* file_path) {
-	m_Id = glCreateShader((GLenum)type);
+static GLuint CreateShader(const char* file_path, GLenum type) {
+	GLuint id = glCreateShader(type);
 
 	std::ifstream file(file_path, std::ios::ate | std::ios::binary);
 	auto length = file.tellg();
@@ -11,42 +11,52 @@ Shader::Shader(Type type, const char* file_path) {
 
 	auto buf = new char[(size_t)length + 1];
 	file.read(buf, length);
+	file.close();
 	buf[length] = '\0';
 
-	glShaderSource(m_Id, 1, &buf, nullptr);
-	glCompileShader(m_Id);
+	glShaderSource(id, 1, &buf, nullptr);
+	glCompileShader(id);
 	delete[] buf;
 
 	GLint success;
-	glGetShaderiv(m_Id, GL_COMPILE_STATUS, &success);
-	if (success != GL_TRUE) {
+	glGetShaderiv(id, GL_COMPILE_STATUS, &success);
+	if (!success) {
 		char err[1024];
-		glGetShaderInfoLog(m_Id, 1024, nullptr, err);
+		glGetShaderInfoLog(id, 1024, nullptr, err);
 		LOG_ERROR("%s", err);
 	}
+
+	return id;
 }
 
-Shader::~Shader() noexcept {
-	if (m_Id) glDeleteShader(m_Id);
-	m_Id = 0;
-}
-
-ShaderProgram::ShaderProgram(Shader vertex, Shader fragment) {
-	m_Id = glCreateProgram();
-	glAttachShader(m_Id, vertex.GetId());
-	glAttachShader(m_Id, fragment.GetId());
-	glLinkProgram(m_Id);
-
-	GLint success;
-	glGetProgramiv(m_Id, GL_LINK_STATUS, &success);
-	if (success != GL_TRUE) {
-		char err[1024];
-		glGetProgramInfoLog(m_Id, 1024, nullptr, err);
-		LOG_ERROR("%s", err);
-	}
+ShaderProgram::ShaderProgram(const char* vert_path, const char* frag_path) {
+	Init(vert_path, frag_path);
 }
 
 ShaderProgram::~ShaderProgram() noexcept {
-	if (m_Id) glDeleteProgram(m_Id);
-	m_Id = 0;
+	if (id) {
+		glDeleteProgram(id);
+		id = 0;
+	}
+}
+
+void ShaderProgram::Init(const char* vert_path, const char* frag_path) {
+	GLuint vert = CreateShader(vert_path, GL_VERTEX_SHADER);
+	GLuint frag = CreateShader(frag_path, GL_FRAGMENT_SHADER);
+
+	id = glCreateProgram();
+	glAttachShader(id, vert);
+	glAttachShader(id, frag);
+	glLinkProgram(id);
+
+	glDeleteShader(vert);
+	glDeleteShader(frag);
+
+	GLint success;
+	glGetProgramiv(id, GL_LINK_STATUS, &success);
+	if (!success) {
+		char err[1024];
+		glGetProgramInfoLog(id, 1024, nullptr, err);
+		LOG_ERROR("%s", err);
+	}
 }

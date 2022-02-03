@@ -36,25 +36,19 @@
     <ClCompile Include="src\gfx\VBO.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="src\entity\components\Physics.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="src\State.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="src\entity\components\Sprite.cpp">
+    <ClCompile Include="src\FrameTimer.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="src\entity\components\PlayerControl.cpp">
+    <ClCompile Include="src\gfx\EBO.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="src\entity\components\Follow.cpp">
+    <ClCompile Include="src\gfx\Animation.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="src\entity\components\Combat.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="src\entity\components\Health.cpp">
+    <ClCompile Include="src\gfx\Camera.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,9 +80,6 @@
     <ClInclude Include="src\entity\ECS.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\entity\ECSComponents.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="src\entity\components\Physics.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
@@ -101,22 +92,19 @@
     <ClInclude Include="src\State.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\entity\components\PlayerControl.h">
+    <ClInclude Include="src\gfx\Camera.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\entity\components\Follow.h">
+    <ClInclude Include="src\gfx\TextureBank.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\entity\Player.h">
+    <ClInclude Include="src\FrameTimer.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\entity\Camera.h">
+    <ClInclude Include="src\gfx\EBO.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\entity\components\Combat.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entity\components\Health.h">
+    <ClInclude Include="src\gfx\Animation.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

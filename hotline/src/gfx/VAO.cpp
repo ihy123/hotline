@@ -1,10 +1,12 @@
 #include "VAO.h"
 
 VAO::VAO() {
-	glGenVertexArrays(1, &m_Id);
+	glGenVertexArrays(1, &id);
 }
 
 VAO::~VAO() noexcept {
-	if (m_Id) glDeleteVertexArrays(1, &m_Id);
-	m_Id = 0;
+	if (id) {
+		glDeleteVertexArrays(1, &id);
+		id = 0;
+	}
 }
