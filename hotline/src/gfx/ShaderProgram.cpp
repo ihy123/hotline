@@ -6,6 +6,8 @@ static GLuint CreateShader(const char* file_path, GLenum type) {
 	GLuint id = glCreateShader(type);
 
 	std::ifstream file(file_path, std::ios::ate | std::ios::binary);
+	if (!file.is_open())
+		LOG_CRITICAL("Failed to open shader file: %s", file_path);
 	auto length = file.tellg();
 	file.seekg(std::ios::beg);
 

@@ -2,7 +2,12 @@
 .vs/
 bin/
 hotline/int/
+hotline/obj/
 
-#files
+# files
 plan.docx
 room.jpg
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.user

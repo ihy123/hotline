@@ -17,7 +17,7 @@ void FrameTimer::Frame() {
 		measureDiff = time - prevMeasure;
 		if (measureDiff >= fpsOutputDelay) {
 			std::ostringstream ss;
-			ss << "OpenGL [" << (int)((float)nFrames / measureDiff) << " fps]";
+			ss << "Hotline [" << (int)((float)nFrames / measureDiff) << " fps]";
 			state.wnd.SetTitle(ss.str().c_str());
 			prevMeasure = time;
 			nFrames = 0;

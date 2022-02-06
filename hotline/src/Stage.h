@@ -13,20 +13,22 @@ public:
 		auto world = bodyA->GetWorld();
 		if (bodyA->IsBullet()) {
 			contact->SetEnabled(false);
-			bodyRemoveList.emplace(bodyA);
+			entityRemoveList.emplace(bodyA->GetUserData().entity);
 			if (!bodyB->IsBullet()) {
 				// bodyB damaged
+				auto& ud = bodyB->GetUserData();
+				
 			}
 		}
 		if (bodyB->IsBullet()) {
 			contact->SetEnabled(false);
-			bodyRemoveList.emplace(bodyB);
+			entityRemoveList.emplace(bodyB->GetUserData().entity);
 			if (!bodyA->IsBullet()) {
 				// bodyA damaged
 			}
 		}
 	}
-	std::set<b2Body*> bodyRemoveList;
+	std::set<entt::entity> entityRemoveList;
 };
 
 class Stage {
@@ -40,7 +42,7 @@ public:
 			"cursor", "res/textures/sprCursor_strip13.png"
 		});
 
-		CreatePlayer("player", b2Vec2(), 0.25f);
+		CreatePlayer("player", b2Vec2(1.0f, 1.0f), 0.25f);
 
 		cursorAnim = Animation("cursor", glm::vec2(), glm::vec2(1.0f), 1.0f / 13.0f, 1.0f);
 
@@ -56,11 +58,12 @@ public:
 	~Stage() noexcept {
 		delete world;
 	}
-	inline void Update(float dt) {
-		//for (auto e : cl.bodyRemoveList) {
-		//	world->DestroyBody(e);
-		//}
-		//cl.bodyRemoveList.clear();
+	void Update(float dt) {
+		for (auto e : cl.entityRemoveList) {
+			registry.destroy(e);
+			printf("entity %u destroyed\n", e);
+		}
+		cl.entityRemoveList.clear();
 
 		// process input
 		{
@@ -96,6 +99,9 @@ public:
 				angle = atan2(dir.y, dir.x);
 				b2player->SetTransform(b2pos, angle);
 			}
+
+			// attack
+
 		}
 
 		// update animations
@@ -111,17 +117,16 @@ public:
 		// update cursor animation
 		cursorAnim.Update(dt);
 	}
-	inline void Tick() {
+	void Tick() {
 		// b2world tick
 		world->Step(TICK_TIME, 8, 3);
 		// make camera follow player
 		b2Vec2 b2playerPos = registry.get<PhysicsComponent>(player).body->GetPosition();
 		camera.pos += (glm::vec2(b2playerPos.x, b2playerPos.y) - camera.pos) * cameraFollowDelay;
 	}
-	inline void Render() {
-		state.renderer.SetViewProj(camera.GetViewProj());
-
+	void Render() {
 		// render sprites
+		state.renderer.SetViewProj(camera.GetViewProj());
 		{
 			auto view = registry.view<SpriteComponent, PhysicsComponent>();
 			for (auto e : view) {
@@ -189,18 +194,16 @@ public:
 	}
 public:
 	entt::registry registry;
-	struct {
-		entt::sigh<void(entt::entity)> update, tick, render;
-		entt::sink<void(entt::entity)> onUpdate{ update }, onTick{ tick }, onRender{ render };
-	} events;
 
-	b2World* world;
-	b2Body* border;
-	OrthoCamera camera;
-	HudCamera hudCamera;
+	b2World* world = nullptr;
+	b2Body* border = nullptr;
 	ContactListener cl;
+
 	entt::entity player;
 	Animation cursorAnim;
+
+	OrthoCamera camera;
+	HudCamera hudCamera;
 
 	static constexpr float playerSpeed = 3.0f;
 	static constexpr float cameraFollowDelay = 0.08f;
